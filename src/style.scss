@@ -1,0 +1,57 @@
+@import "./variables.scss";
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  background-color: $backgroundWhite;
+  font-size: $desctop-fontSize;
+  padding: 50px;
+  color: $borderRed;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  letter-spacing: -0.5px;
+}
+
+// modal backdrop
+.modal-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: grey;
+  height: 100vh;
+  width: 100vw;
+  opacity: 0;
+  z-index: 0;
+}
+body.modal-window-opened {
+  .modal-backdrop {
+    z-index: 10;
+    opacity: 0.6;
+  }
+}
+// buttons
+.button {
+  border: $interfaceBorder;
+  border-radius: $interfaceBorderRadius;
+  background-color: $backgroundWhite;
+  transition: background-color 0.2s ease;
+  min-height: 40px;
+  min-width: 80px;
+  padding: 2px 4px;
+  user-select: none;
+}
+
+.button_disabled {
+  opacity: 0.4;
+  cursor: auto;
+}
+@media (hover: hover) {
+  .button:not(.button_disabled):hover {
+    background-color: $borderRed;
+    color: $backgroundWhite;
+    .close-button__stick {
+      background-color: $backgroundWhite;
+    }
+  }
+}

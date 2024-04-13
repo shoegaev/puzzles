@@ -1,0 +1,154 @@
+@import "../../../variables.scss";
+
+.game-page__game-selector {
+  background-color: $backgroundWhite;
+  padding: 4px;
+  border: $interfaceBorder;
+  border-radius: $interfaceBorderRadius;
+  width: 200px;
+
+  position: relative;
+  top: 0;
+  left: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+
+  transition: all 0.5s ease;
+}
+
+// close button
+.game-selector__close-button {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  transform: translate(-75%, -25%);
+}
+.button.close-button {
+  min-width: 0px;
+  min-height: 0px;
+  cursor: pointer;
+  padding: 0;
+  height: 0px;
+  width: 0px;
+  border-width: 0px;
+  transition: background-color 0.2s ease, width 0.5s ease, height 0.5s ease,
+    border-width 0.5s ease;
+}
+.close-button__stick {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0px;
+  height: 4px;
+  background-color: $borderRed;
+  transition: background-color 0.2s ease, width 0.5s ease, height 0.5s ease,
+    border-width 0.5s ease;
+}
+.close-button__stick:first-child {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+.close-button__stick:nth-child(2) {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+// game information
+.game-information__information {
+  transition: all 0.5s ease;
+  overflow: hidden;
+  opacity: 1;
+  height: 60px;
+}
+
+// selectors
+.game-selector__selectors {
+  display: flex;
+  gap: 10px;
+}
+.selector {
+  // border: $interfaceBorder;
+  border-radius: $interfaceBorderRadius;
+  background-color: $backgroundPink;
+  height: 0px;
+  opacity: 0;
+
+  min-width: 100px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  transition: all 0.5s ease;
+  padding-right: 4px;
+  border: 4px $backgroundPink solid;
+}
+.selector:nth-child(2) {
+  overflow-y: scroll;
+}
+
+.selector::-webkit-scrollbar {
+  width: 10px;
+}
+
+.selector::-webkit-scrollbar-thumb {
+  background: $borderRed;
+  border-radius: 4px;
+  opacity: 0.5;
+}
+
+.selector__item {
+  cursor: pointer;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  border-radius: $interfaceBorderRadius;
+  padding: 0px 4px;
+  transition: background-color .2s ease;
+}
+.selector__item:hover {
+  color: $borderRed;
+}
+.selector__item_active {
+  background-color: rgb(186, 222, 222);
+}
+.selector__item-status {
+  width: 15px;
+  height: 15px;
+  border: $interfaceBorderThin;
+}
+
+.game-selector__button {
+  cursor: pointer;
+}
+
+// opened modal window
+.game-page__game-selector.game-selector_open {
+  width: 400px;
+  transform: translate(-50%, -50%);
+  z-index: 20;
+
+  .button.close-button {
+    width: 40px;
+    height: 40px;
+    border: $interfaceBorder;
+    .close-button__stick {
+      width: 80%;
+    }
+  }
+  .selector {
+    height: 200px;
+    opacity: 1;
+  }
+
+  .game-information__information {
+    height: 0;
+    opacity: 0;
+  }
+
+  .game-selector__button_disabled {
+    opacity: 0.5;
+    cursor: auto;
+  }
+}
