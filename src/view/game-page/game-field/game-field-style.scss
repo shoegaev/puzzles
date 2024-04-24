@@ -1,0 +1,52 @@
+@import "../../../variables.scss";
+
+.game-field__result-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: $backgroundPink;
+  border-radius: $interfaceBorderRadius;
+  margin-bottom: 20px;
+}
+.game-field__words-panel {
+  background-color: $backgroundPink;
+  border-radius: $interfaceBorderRadius;
+}
+.line {
+  width: 100%;
+  height: 90px;
+  display: flex;
+  padding: 10px 0.25%;
+  gap: 0.5%;
+  transition: 0.4 all ease;
+}
+.game-field__words-panel {
+  .line {
+    display: none;
+  }
+  .line.words-panel__line_active{
+    display: flex;
+  }
+}
+
+.item {
+  transition: 0.4 all ease;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: $desctop-fontSize-heading;
+  position: relative;
+  overflow: hidden;
+
+  cursor: pointer;
+  user-select: none;
+}
+
+.item__text {
+  z-index: 3;
+}
+.item__image {
+  position: absolute;
+}

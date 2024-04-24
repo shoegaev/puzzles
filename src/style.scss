@@ -5,12 +5,16 @@
   box-sizing: border-box;
 }
 body {
-  background-color: $backgroundWhite;
+  background-color: $backgroundPinkIntense;
   font-size: $desctop-fontSize;
-  padding: 50px;
+  // padding: 10px 5px;
   color: $borderRed;
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
   letter-spacing: -0.5px;
+
+  margin-top: 10px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 // modal backdrop
@@ -20,11 +24,12 @@ body {
   left: 0;
   background-color: grey;
   height: 100vh;
-  width: 100vw;
+  width: 100%;
   opacity: 0;
-  z-index: 0;
+  z-index: -10;
 }
 body.modal-window-opened {
+  overflow-y: hidden;
   .modal-backdrop {
     z-index: 10;
     opacity: 0.6;
@@ -34,7 +39,7 @@ body.modal-window-opened {
 .button {
   border: $interfaceBorder;
   border-radius: $interfaceBorderRadius;
-  background-color: $backgroundWhite;
+  background-color: $backgroundPinkIntense;
   transition: background-color 0.2s ease;
   min-height: 40px;
   min-width: 80px;
@@ -49,9 +54,21 @@ body.modal-window-opened {
 @media (hover: hover) {
   .button:not(.button_disabled):hover {
     background-color: $borderRed;
-    color: $backgroundWhite;
+    color: $backgroundPinkIntense;
     .close-button__stick {
-      background-color: $backgroundWhite;
+      background-color: $backgroundPinkIntense;
     }
+  }
+}
+.main-container {
+  width: 100%;
+  padding: 0 250px;
+}
+
+
+
+@media (max-width: 800px){
+  .main-container {
+    padding: 0 10px;
   }
 }

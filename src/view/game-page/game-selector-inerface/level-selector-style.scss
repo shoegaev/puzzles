@@ -1,11 +1,11 @@
 @import "../../../variables.scss";
 
 .game-page__game-selector {
-  background-color: $backgroundWhite;
+  background-color: $backgroundPinkIntense;
   padding: 4px;
   border: $interfaceBorder;
   border-radius: $interfaceBorderRadius;
-  width: 200px;
+  width: 350px;
 
   position: relative;
   top: 0;
@@ -56,11 +56,14 @@
 }
 
 // game information
+.game-information__heading {
+  font-size: $desctop-fontSize-heading;
+}
 .game-information__information {
   transition: all 0.5s ease;
   overflow: hidden;
   opacity: 1;
-  height: 60px;
+  height: 90px;
 }
 
 // selectors
@@ -83,6 +86,7 @@
   transition: all 0.5s ease;
   padding-right: 4px;
   border: 4px $backgroundPink solid;
+  border-width: 0px;
 }
 .selector:nth-child(2) {
   overflow-y: scroll;
@@ -105,7 +109,7 @@
   align-items: center;
   border-radius: $interfaceBorderRadius;
   padding: 0px 4px;
-  transition: background-color .2s ease;
+  transition: background-color 0.2s ease;
 }
 .selector__item:hover {
   color: $borderRed;
@@ -140,6 +144,7 @@
   .selector {
     height: 200px;
     opacity: 1;
+    border-width: 4px;
   }
 
   .game-information__information {

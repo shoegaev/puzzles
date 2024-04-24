@@ -141,7 +141,7 @@ export class GameSelectorInerfaceView extends ViewLoadable {
       throw new Error("roundSelector is null");
     }
     this.roundSelector.innerHTML = "";
-    this.appLoader.fullLevelData?.then((levelData) => {
+    this.appLoader.levelData?.then((levelData) => {
       const roundsQuantity = levelData.roundsCount;
       for (let i = 1; i <= roundsQuantity; i += 1) {
         const roundItem = new ElementCreator({
@@ -302,6 +302,11 @@ export class GameSelectorInerfaceView extends ViewLoadable {
       if (this.getHtmlElement().classList.contains("game-selector_open")) {
         this.fillGameInformation();
         this.closeModalWindow();
+        this.appLoader.loadLevelData(String(this.config.levelNumber));
+        this.appLoader.loadFullData(
+          String(this.config.levelNumber),
+          String(this.config.roundNumber),
+        );
       } else {
         this.openModalWindow();
         this.addRounds();

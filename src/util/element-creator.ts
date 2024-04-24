@@ -44,7 +44,7 @@ export class ElementCreator {
     }
   }
 
-  private setElementAttributes(atributes: Atributes[]): void {
+  public setElementAttributes(atributes: Atributes[]): void {
     for (let i = 0; i < atributes.length; i += 1) {
       this.element?.setAttribute(atributes[i].name, atributes[i].value);
     }

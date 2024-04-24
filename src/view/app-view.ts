@@ -1,4 +1,3 @@
-import { View } from "../util/view";
 import { ViewLoadable } from "../util/viewLoadable";
 import { ElementParametrs } from "../types/view-types";
 import { GamePageView } from "./game-page/game-page-view";

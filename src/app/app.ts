@@ -9,7 +9,7 @@ export class App {
 
   constructor() {
     this.appLoader = new Loader();
-    this.appLoader.loadLevelData("1");
+    this.appLoader.loadFullData("1", "1");
 
     const APP_VIEW_PARAMS: ElementParametrs = {
       tag: "div",
