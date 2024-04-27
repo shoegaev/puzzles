@@ -2,16 +2,24 @@ import { ViewLoadable } from "../../../../util/viewLoadable";
 import { ElementParametrs } from "../../../../types/view-types";
 import { Loader } from "../../../../loader/loader";
 import { ElementCreator } from "../../../../util/element-creator";
+import { ResultPanelView } from "../result-panel/result-panel-view";
 
 export class WordsPanelView extends ViewLoadable {
-  constructor(params: ElementParametrs, appLoader: Loader) {
+  // panelViews: [ResultPanelView | null, WordsPanelView | null];
+
+  constructor(
+    params: ElementParametrs,
+    appLoader: Loader,
+    // gamePagePanels: [ResultPanelView | null, WordsPanelView | null],
+  ) {
     super(params, appLoader);
+    // this.panelViews = gamePagePanels;
     this.addInnerElementsParams();
     this.addInnerElements();
     this.fillPanel();
   }
 
-  protected addInnerElementsParams(): void {
+  private addInnerElementsParams(): void {
     for (let i = 0; i < 10; i += 1) {
       this.innerElementsParams.push({
         tag: "div",
@@ -21,7 +29,7 @@ export class WordsPanelView extends ViewLoadable {
     this.innerElementsParams[0].cssClasses.push("words-panel__line_active");
   }
 
-  protected fillPanel(): void {
+  public fillPanel(): void {
     this.appLoader.fullData?.then((data) => {
       const lines = [...this.getHtmlElement().querySelectorAll(".line")];
       const sentences = data[0]?.map(
@@ -67,10 +75,9 @@ export class WordsPanelView extends ViewLoadable {
           const itemImg = new Image();
           itemImg.className = "item__image";
           itemImg.src = imageUrl;
-          itemImg.ondragstart = () => false;
+          itemImg.style.height = "1000%";
           // `${(100 / itemWidth) * 100}%` - ширина родительского контейнера айтема в процентах ширины айтема
           itemImg.style.width = `${(100 / itemWidth) * 100}%`;
-
           // вертикальное смещение в зависимости от номера предложения
           itemImg.style.top = `-${100 * sentenceIndex}%`;
 
