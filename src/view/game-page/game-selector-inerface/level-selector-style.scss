@@ -7,7 +7,6 @@
   border-radius: $interfaceBorderRadius;
   width: 350px;
 
-  position: relative;
   top: 0;
   left: 0;
 
@@ -130,7 +129,6 @@
 // opened modal window
 .game-page__game-selector.game-selector_open {
   width: 500px;
-  transform: translate(-50%, -50%);
   z-index: 20;
 
   .button.close-button {

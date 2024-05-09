@@ -2,6 +2,7 @@ import { ViewLoadable } from "../../../util/viewLoadable";
 import { ElementParametrs } from "../../../types/view-types";
 import { Loader } from "../../../loader/loader";
 import { ElementCreator } from "../../../util/element-creator";
+import { AnimationMaker } from "../../../util/animation-maker";
 import "./level-selector-style.scss";
 
 export class GameSelectorInerfaceView extends ViewLoadable {
@@ -331,16 +332,19 @@ export class GameSelectorInerfaceView extends ViewLoadable {
     if (button === null) {
       return;
     }
-    this.getHtmlElement().classList.add("game-selector_open");
-    this.levelSelector?.children[this.config.levelNumber - 1].classList.add(
-      "selector__item_active",
-    );
-    button.textContent = "play";
+
     const panel = this.getHtmlElement();
-    const initialCoordinates = panel.getBoundingClientRect();
-    panel.style.top = `calc(50vh + ${window.pageYOffset}px - ${initialCoordinates.y}px)`;
-    panel.style.left = `calc(50vw + ${window.pageXOffset}px - ${initialCoordinates.x}px)`;
-    document.body.classList.add("modal-window-opened");
+    const panelAnimator = new AnimationMaker(panel);
+    panelAnimator.animationDuration = 0.8;
+    panelAnimator.centerOnPage({ saveEmptyPlace: true });
+    setTimeout(() => {
+      panel.classList.add("game-selector_open");
+      this.levelSelector?.children[this.config.levelNumber - 1].classList.add(
+        "selector__item_active",
+      );
+      button.textContent = "play";
+      document.body.classList.add("modal-window-opened");
+    }, 0);
   }
 
   private closeModalWindow(): void {
@@ -350,16 +354,17 @@ export class GameSelectorInerfaceView extends ViewLoadable {
     if (button === null) {
       return;
     }
-    this.getHtmlElement().classList.remove("game-selector_open");
-    button.classList.remove("button_disabled");
-    button.textContent = "change round";
     const panel = this.getHtmlElement();
-    panel.style.top = "0";
-    panel.style.left = "0";
+    const panelAnimator = new AnimationMaker(panel);
+    const copy = document.querySelector(".game-page .game-page__game-selector");
+    if (!(copy instanceof HTMLElement)) {
+      throw new Error();
+    }
+    panelAnimator.animationDuration = 0.8;
+    panelAnimator.returnAfterCenter(copy);
+    panel.classList.remove("game-selector_open");
+    button.classList.remove("button_disabled");
+    button.textContent = "change level";
     document.body.classList.remove("modal-window-opened");
-    setTimeout(() => {
-      panel.style.top = "";
-      panel.style.left = "";
-    }, 400);
   }
 }

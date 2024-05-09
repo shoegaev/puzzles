@@ -248,4 +248,59 @@ export class AnimationMaker {
       this.folowPointerStatus.initWidth = null;
     }
   }
+
+  public centerOnPage(options: { saveEmptyPlace: boolean }): HTMLElement {
+    const initialCoordinates = this.element.getBoundingClientRect();
+    const copy = this.element.cloneNode(true);
+    if (!(copy instanceof HTMLElement)) {
+      throw new Error();
+    }
+    if (options.saveEmptyPlace) {
+      const copyAnimator = new AnimationMaker(copy);
+      copyAnimator.animationDuration = 0;
+      copyAnimator.bleach();
+      this.element.after(copy);
+    }
+
+    this.element.style.position = "absolute";
+    this.element.style.top = `${initialCoordinates.y + window.scrollY}px`;
+    this.element.style.left = `${initialCoordinates.x + window.scrollX}px`;
+    const transition = `top ${this.animationDuration / 1.5}s ease, left ${
+      this.animationDuration
+    }s ease`;
+    this.setTransition(transition);
+    document.body.append(this.element);
+    setTimeout(() => {
+      console.log(this.element.style.transition);
+      this.element.style.zIndex = "1000";
+      this.element.style.top = "50vh";
+      this.element.style.left = "50vw";
+      this.element.style.transform = "translate(-50%, -50%)";
+      setTimeout(() => {
+        this.resetTransition();
+      }, this.animationDuration * 1000);
+    }, 0);
+    return copy;
+  }
+
+  public returnAfterCenter(copy: HTMLElement): void {
+    const copyCoordinates = copy.getBoundingClientRect();
+    const transition = `top ${this.animationDuration / 1.5}s ease, left ${
+      this.animationDuration
+    }s ease`;
+    this.setTransition(transition);
+    this.element.style.top = `${copyCoordinates.y + window.scrollY}px`;
+    this.element.style.left = `${copyCoordinates.x + window.scrollX}px`;
+    this.element.style.transform = "";
+
+    setTimeout(() => {
+      this.resetTransition();
+      this.element.style.zIndex = "";
+      this.element.style.position = "";
+      copy.after(this.element);
+      copy.remove();
+      this.element.style.top = "";
+      this.element.style.left = "";
+    }, this.animationDuration * 1000);
+  }
 }
