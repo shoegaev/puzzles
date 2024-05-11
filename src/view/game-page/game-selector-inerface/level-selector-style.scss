@@ -1,6 +1,7 @@
 @import "../../../variables.scss";
 
 .game-page__game-selector {
+  position: relative;
   background-color: $backgroundPinkIntense;
   padding: 4px;
   border: $interfaceBorder;
