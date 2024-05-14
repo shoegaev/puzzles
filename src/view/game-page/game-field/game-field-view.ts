@@ -74,7 +74,26 @@ export class GameFieldView extends ViewLoadable {
     });
   }
 
-  private itemsEventsSetup(event: Event): HTMLElement[] | null {
+  public moveToNextSentence(): void {
+    [this.wordsActiveLine, this.resultActiveLine].forEach((line) => {
+      const nextLine = line.nextElementSibling;
+      if (!(nextLine instanceof HTMLElement)) {
+        return;
+      }
+      if (line.classList.contains("result-panel__line_active")) {
+        line.classList.remove("result-panel__line_active");
+        nextLine.classList.add("result-panel__line_active");
+        this.resultActiveLine = nextLine;
+      } else {
+        line.classList.remove("words-panel__line_active");
+        nextLine.classList.add("words-panel__line_active");
+        this.wordsActiveLine = nextLine;
+      }
+    });
+    this.appLoader.sentenceNumber += 1;
+  }
+
+  public itemsEventsSetup(event: Event): HTMLElement[] | null {
     const { currentTarget: line, target } = event;
     if (!(target instanceof HTMLElement) || !(line instanceof HTMLElement)) {
       throw new Error("currenTtarget or target is not HTMLelement");

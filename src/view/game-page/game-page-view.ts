@@ -1,6 +1,7 @@
 import { ViewLoadable } from "../../util/viewLoadable";
 import { GameSelectorInerfaceView } from "./game-selector-inerface/game-selector-interface-view";
 import { GameFieldView } from "./game-field/game-field-view";
+import { BottomPanelView } from "./bottom-panel/bottom-panel-view";
 import { ElementParametrs } from "../../types/view-types";
 import { Loader } from "../../loader/loader";
 import "./game-page-style.scss";
@@ -10,13 +11,16 @@ export class GamePageView extends ViewLoadable {
 
   gameFieldView: GameFieldView;
 
+  bottomPanelView: BottomPanelView;
+
   constructor(params: ElementParametrs, appLoader: Loader) {
     super(params, appLoader);
     this.gameSelectorInterface = this.createGameSelectorInterfaceView();
     this.gameFieldView = this.createGameFieldView();
+    this.bottomPanelView = this.createBottomPanelView();
   }
 
-  createGameSelectorInterfaceView(): GameSelectorInerfaceView {
+  private createGameSelectorInterfaceView(): GameSelectorInerfaceView {
     const GAME_SELECTOR_PARAMS: ElementParametrs = {
       tag: "div",
       cssClasses: ["game-page__game-selector ", "game-selector"],
@@ -29,7 +33,7 @@ export class GamePageView extends ViewLoadable {
     return gameSelectorInterface;
   }
 
-  createGameFieldView(): GameFieldView {
+  private createGameFieldView(): GameFieldView {
     const GAME_FIELD_PARAM: ElementParametrs = {
       tag: "div",
       cssClasses: ["game-page__game-field", "game-field"],
@@ -37,5 +41,19 @@ export class GamePageView extends ViewLoadable {
     const GameField = new GameFieldView(GAME_FIELD_PARAM, this.appLoader);
     this.getHtmlElement().append(GameField.getHtmlElement());
     return GameField;
+  }
+
+  createBottomPanelView(): BottomPanelView {
+    const BOTTOM_PANEL_PARAMS: ElementParametrs = {
+      tag: "div",
+      cssClasses: ["game-page__bottom-panel", "bottom-panel"],
+    };
+    const BottomPanel = new BottomPanelView(
+      BOTTOM_PANEL_PARAMS,
+      this.appLoader,
+      this.gameFieldView,
+    );
+    this.getHtmlElement().append(BottomPanel.getHtmlElement());
+    return BottomPanel;
   }
 }

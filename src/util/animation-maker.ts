@@ -76,10 +76,13 @@ export class AnimationMaker {
     const initHeight = this.element.style.height;
     // if needed create elements bleached copy in initial place, and squeeze it.
     if (options?.smoothDisappearance) {
-      const copy = this.element.cloneNode(true);
+      // copy is empty for to correct verification of sentence.
+      const copy = this.element.cloneNode();
       if (!(copy instanceof HTMLElement)) {
         throw new Error("copy is not HTMLElement");
       }
+      copy.style.width = `${initialCoordinates.width}px`;
+      copy.style.height = `${initialCoordinates.height}px`;
       const copyAnimator = new AnimationMaker(copy);
       this.element.before(copy);
       copyAnimator.bleach();
@@ -167,15 +170,17 @@ export class AnimationMaker {
   ): (moveEvent: PointerEvent) => void {
     const eventHandler = (moveEvent: PointerEvent) => {
       if (!this.folowPointerStatus.isActive) {
-        const copy = this.element.cloneNode(true);
+        this.folowPointerStatus.isActive = true;
+        const copy = this.element.cloneNode();
         if (!(copy instanceof HTMLElement)) {
           throw new Error();
         }
+        copy.style.width = `${initCoordinates.width}px`;
+        copy.style.height = `${initCoordinates.height}px`;
         this.folowPointerStatus.copy = copy;
         const copyAnimator = new AnimationMaker(copy);
         copyAnimator.bleach();
 
-        this.folowPointerStatus.isActive = true;
         this.element.before(copy);
         this.element.style.position = "absolute";
         this.element.style.zIndex = "1000";

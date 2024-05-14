@@ -42,10 +42,13 @@ body.modal-window-opened {
   border-radius: $interfaceBorderRadius;
   background-color: $backgroundPinkIntense;
   transition: background-color 0.2s ease;
-  min-height: 40px;
-  min-width: 80px;
+  min-height: 60px;
+  min-width: 100px;
   padding: 2px 4px;
   user-select: none;
+  cursor: pointer;
+  text-align: center;
+  padding: 5px;
 }
 
 .button_disabled {
@@ -63,7 +66,7 @@ body.modal-window-opened {
 }
 .main-container {
   margin-top: 10px;
-  padding: 0 250px;
+  padding: 0 280px;
 }
 
 @media (max-width: 800px) {

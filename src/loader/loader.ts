@@ -1,4 +1,4 @@
-import { SentenceData, RoundData, FullLevelData } from "../types/data-types";
+import { SentenceData, FullLevelData } from "../types/data-types";
 
 export class Loader {
   levelData: Promise<FullLevelData> | null;
@@ -9,10 +9,16 @@ export class Loader {
 
   urlBegining: string;
 
+  currentSentences: string[];
+
+  sentenceNumber: number;
+
   constructor() {
     this.levelData = null;
     this.ImageUrl = null;
     this.fullData = null;
+    this.currentSentences = [];
+    this.sentenceNumber = 1;
     this.urlBegining =
       "https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/";
   }
@@ -31,15 +37,16 @@ export class Loader {
       .then(() => {
         this.loadImages(roundNumber);
       })
-      .then(() =>
-        // eslint-disable-next-line
-        Promise.all([
-          this.levelData?.then(
-            (levelData) => levelData.rounds[Number(roundNumber) - 1].words,
-          ),
-          this.ImageUrl,
-          "место для информации об аудио",
-        ]),
+      .then(
+        () =>
+          // eslint-disable-next-line
+          Promise.all([
+            this.levelData?.then(
+              (levelData) => levelData.rounds[Number(roundNumber) - 1].words,
+            ),
+            this.ImageUrl,
+            "место для информации об аудио",
+          ]),
         // eslint-disable-next-line
       );
   }

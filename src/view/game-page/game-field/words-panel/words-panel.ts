@@ -31,6 +31,7 @@ export class WordsPanelView extends ViewLoadable {
 
   public fillPanel(): void {
     this.appLoader.fullData?.then((data) => {
+      this.appLoader.sentenceNumber = 1;
       const lines = [...this.getHtmlElement().querySelectorAll(".line")];
       const sentences = data[0]?.map(
         (sentenceData) => sentenceData.textExample,
@@ -39,6 +40,7 @@ export class WordsPanelView extends ViewLoadable {
       if (sentences === undefined || imageUrl === null) {
         throw new Error("incorrect game data");
       }
+      this.appLoader.currentSentences = sentences;
       sentences.forEach((sentence, sentenceIndex) => {
         const sentenceArr = sentence.split(" ");
         const lettersQuantity = sentenceArr.join("").length;

@@ -3,7 +3,6 @@
 .game-field__result-panel {
   display: flex;
   flex-direction: column;
-  gap: 10px;
   background-color: $backgroundPink;
   border-radius: $interfaceBorderRadius;
   margin-bottom: 20px;
@@ -13,10 +12,10 @@
   border-radius: $interfaceBorderRadius;
 }
 .line {
-  min-height: 90px;
+  min-height: 80px;
   width: 100%;
   display: flex;
-  padding: 10px 0.25%;
+  padding: 5px 0.25%;
   gap: 5px;
 }
 .game-field__words-panel {
@@ -38,9 +37,8 @@
   position: relative;
   overflow: hidden;
   transition: color 1s ease-in;
-  cursor: pointer;
   user-select: none;
-  height: calc(90px - 20px);
+  height: 65px;
 }
 
 .item__text {
@@ -67,14 +65,21 @@
   opacity: 0;
   transition: 0.2s all ease;
 }
+.result-panel__line_active,
+.words-panel__line_active {
+  cursor: pointer;
+}
 @media (hover: hover) {
-  .item:hover {
-    .item__text {
-      background-color: rgba($backgroundPink, 0.7);
+  .result-panel__line_active,
+  .words-panel__line_active {
+    .item:hover {
+      .item__text {
+        background-color: rgba($backgroundPink, 0.7);
+      }
     }
-  }
-  .item:hover.item::before {
-    opacity: 1;
+    .item:hover.item::before {
+      opacity: 1;
+    }
   }
 }
 @media (hover: none) {
@@ -85,5 +90,11 @@
     .item__text {
       background-color: rgba($backgroundPink, 0.7);
     }
+  }
+}
+
+.item_no-text {
+  .item__text {
+    opacity: 0;
   }
 }
