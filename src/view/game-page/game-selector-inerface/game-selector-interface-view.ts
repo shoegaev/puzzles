@@ -3,6 +3,8 @@ import { ElementParametrs } from "../../../types/view-types";
 import { Loader } from "../../../loader/loader";
 import { ElementCreator } from "../../../util/element-creator";
 import { AnimationMaker } from "../../../util/animation-maker";
+import { AppCashe } from "../../../app-cashe/app-cashe";
+import { GameFieldView } from "../game-field/game-field-view";
 import "./level-selector-style.scss";
 
 export class GameSelectorInerfaceView extends ViewLoadable {
@@ -15,12 +17,23 @@ export class GameSelectorInerfaceView extends ViewLoadable {
 
   private roundSelector: HTMLElement | null;
 
-  constructor(params: ElementParametrs, appLoader: Loader) {
+  private appCashe: AppCashe;
+
+  private gameFieldView: GameFieldView;
+
+  constructor(
+    params: ElementParametrs,
+    appLoader: Loader,
+    appCashe: AppCashe,
+    gameFieldView: GameFieldView,
+  ) {
     super(params, appLoader);
+    this.appCashe = appCashe;
     this.config = {
-      levelNumber: 1,
-      roundNumber: 1,
+      levelNumber: appCashe.cashObject.level,
+      roundNumber: appCashe.cashObject.round,
     };
+    this.gameFieldView = gameFieldView;
     this.levelSelector = null;
     this.roundSelector = null;
     this.configureView();
@@ -70,13 +83,13 @@ export class GameSelectorInerfaceView extends ViewLoadable {
       {
         tag: "div",
         cssClasses: ["game-information__level"],
-        textContent: "Level: local storage",
+        textContent: `Level: ${this.config.levelNumber}`,
         target: ".game-information__information",
       },
       {
         tag: "div",
         cssClasses: ["game-information__round"],
-        textContent: "Round: local storage",
+        textContent: `Round: ${this.config.roundNumber}`,
         target: ".game-information__information",
       },
       {
@@ -307,6 +320,11 @@ export class GameSelectorInerfaceView extends ViewLoadable {
         this.appLoader.loadFullData(
           String(this.config.levelNumber),
           String(this.config.roundNumber),
+        );
+        this.gameFieldView.refillPanel();
+        this.appCashe.setRoundAndLevelNumbers(
+          this.config.roundNumber,
+          this.config.levelNumber,
         );
       } else {
         this.openModalWindow();

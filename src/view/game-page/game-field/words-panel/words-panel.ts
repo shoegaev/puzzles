@@ -2,18 +2,10 @@ import { ViewLoadable } from "../../../../util/viewLoadable";
 import { ElementParametrs } from "../../../../types/view-types";
 import { Loader } from "../../../../loader/loader";
 import { ElementCreator } from "../../../../util/element-creator";
-import { ResultPanelView } from "../result-panel/result-panel-view";
 
 export class WordsPanelView extends ViewLoadable {
-  // panelViews: [ResultPanelView | null, WordsPanelView | null];
-
-  constructor(
-    params: ElementParametrs,
-    appLoader: Loader,
-    // gamePagePanels: [ResultPanelView | null, WordsPanelView | null],
-  ) {
+  constructor(params: ElementParametrs, appLoader: Loader) {
     super(params, appLoader);
-    // this.panelViews = gamePagePanels;
     this.addInnerElementsParams();
     this.addInnerElements();
     this.fillPanel();
@@ -31,7 +23,6 @@ export class WordsPanelView extends ViewLoadable {
 
   public fillPanel(): void {
     this.appLoader.fullData?.then((data) => {
-      this.appLoader.sentenceNumber = 1;
       const lines = [...this.getHtmlElement().querySelectorAll(".line")];
       const sentences = data[0]?.map(
         (sentenceData) => sentenceData.textExample,

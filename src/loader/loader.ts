@@ -1,6 +1,9 @@
-import { SentenceData, FullLevelData } from "../types/data-types";
+import { AppCashe } from "../app-cashe/app-cashe";
+import { SentenceData, FullLevelData } from "../types/loader-data-types";
 
 export class Loader {
+  appCashe: AppCashe;
+
   levelData: Promise<FullLevelData> | null;
 
   ImageUrl: Promise<string> | null;
@@ -11,14 +14,12 @@ export class Loader {
 
   currentSentences: string[];
 
-  sentenceNumber: number;
-
-  constructor() {
+  constructor(appCashe: AppCashe) {
+    this.appCashe = appCashe;
     this.levelData = null;
     this.ImageUrl = null;
     this.fullData = null;
     this.currentSentences = [];
-    this.sentenceNumber = 1;
     this.urlBegining =
       "https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/";
   }
@@ -59,5 +60,11 @@ export class Loader {
         .then((response: Response) => response.blob())
         .then((blob) => URL.createObjectURL(blob));
     });
+  }
+
+  public getCurrentSentence(): string[] {
+    return this.currentSentences[
+      this.appCashe.cashObject.filledSentenceNumber
+    ].split(" ");
   }
 }

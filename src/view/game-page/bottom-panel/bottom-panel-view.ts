@@ -2,23 +2,31 @@ import { ViewLoadable } from "../../../util/viewLoadable";
 import { ElementParametrs } from "../../../types/view-types";
 import { Loader } from "../../../loader/loader";
 import { GameFieldView } from "../game-field/game-field-view";
+import { AppCashe } from "../../../app-cashe/app-cashe";
 import "./bottom-panel-style.scss";
 
 export class BottomPanelView extends ViewLoadable {
   gameFieldView: GameFieldView;
 
+  appCashe: AppCashe;
+
   constructor(
     params: ElementParametrs,
     appLoader: Loader,
     gameFieldView: GameFieldView,
+    appCashe: AppCashe,
   ) {
     super(params, appLoader);
+    this.appCashe = appCashe;
     this.gameFieldView = gameFieldView;
     this.addInnerElementParams();
     this.addInnerElements();
     this.hideWordsButtonOnCLick();
     this.continueButtonOnCLick();
     this.continueButtonStatus();
+    this.appLoader.fullData?.then(() => {
+      this.checkContinueButtonStatus();
+    });
   }
 
   private addInnerElementParams(): void {
@@ -72,19 +80,35 @@ export class BottomPanelView extends ViewLoadable {
     const button = this.getHtmlElement().querySelector(
       ".bottom-panel__continue-button",
     );
+    if (this.appCashe.cashObject.filledSentenceNumber === 9) {
+      console.log("конец");
+    } else {
+      button?.addEventListener("click", () => {
+        if (button.classList.contains("button_disabled")) {
+          return;
+        }
+        this.gameFieldView.moveToNextSentence();
+      });
+    }
+  }
 
-    button?.addEventListener("click", () => {
-      if (button.classList.contains("button_disabled")) {
+  public checkContinueButtonStatus(): void {
+    const assembledSentence =
+      this.appCashe.cashObject.wordsInResultLine.currentState;
+    const rightSentence = this.appLoader.getCurrentSentence();
+    const button = this.getHtmlElement().querySelector(
+      ".bottom-panel__continue-button",
+    );
+    button?.classList.remove("button_disabled");
+    for (let i = 0; i < rightSentence.length; i += 1) {
+      if (rightSentence[i] !== assembledSentence[i]) {
+        button?.classList.add("button_disabled");
         return;
       }
-      this.gameFieldView.moveToNextSentence();
-    });
+    }
   }
 
   private continueButtonStatus(): void {
-    const continueButton = this.getHtmlElement().querySelector(
-      ".bottom-panel__continue-button",
-    );
     const lines = [
       ...this.gameFieldView.getHtmlElement().querySelectorAll(".line"),
     ];
@@ -94,25 +118,18 @@ export class BottomPanelView extends ViewLoadable {
         if (arr === null) {
           return;
         }
-        const [, item] = arr;
         const pointerUpHandler = () => {
-          setTimeout(() => {
-            const currentSentence = [
-              ...this.gameFieldView.resultActiveLine.children,
-            ].reduce((acc, el) => `${acc}${el.textContent?.trim()}`, "");
-            if (
-              this.appLoader.currentSentences[this.appLoader.sentenceNumber - 1]
-                .split(" ")
-                .join("") === currentSentence
-            ) {
-              continueButton?.classList.remove("button_disabled");
-            } else {
-              continueButton?.classList.add("button_disabled");
-            }
-            item.removeEventListener("pointerup", pointerUpHandler);
-          }, 0);
+          this.checkContinueButtonStatus();
+          window.removeEventListener("pointerup", pointerUpHandler);
         };
-        item.addEventListener("pointerup", pointerUpHandler);
+        window.addEventListener("pointerup", pointerUpHandler);
+      });
+      line.addEventListener("click", (event) => {
+        const arr = this.gameFieldView.itemsEventsSetup(event);
+        if (arr === null) {
+          return;
+        }
+        this.checkContinueButtonStatus();
       });
     });
   }

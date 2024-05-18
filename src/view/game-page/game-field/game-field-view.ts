@@ -4,9 +4,12 @@ import { Loader } from "../../../loader/loader";
 import { ResultPanelView } from "./result-panel/result-panel-view";
 import { WordsPanelView } from "./words-panel/words-panel";
 import { AnimationMaker, InsertOptions } from "../../../util/animation-maker";
+import { AppCashe } from "../../../app-cashe/app-cashe";
 import "./game-field-style.scss";
 
 export class GameFieldView extends ViewLoadable {
+  appCashe: AppCashe;
+
   resultPanelView: ResultPanelView;
 
   wordsPanelView: WordsPanelView;
@@ -19,8 +22,9 @@ export class GameFieldView extends ViewLoadable {
 
   resultActiveLine: HTMLElement;
 
-  constructor(params: ElementParametrs, appLoader: Loader) {
+  constructor(params: ElementParametrs, appLoader: Loader, appCashe: AppCashe) {
     super(params, appLoader);
+    this.appCashe = appCashe;
     this.resultPanelView = this.createResultPanel();
     this.wordsPanelView = this.createWordsPanel();
     this.wordsLines = [];
@@ -30,7 +34,52 @@ export class GameFieldView extends ViewLoadable {
     [this.resultActiveLine] = this.resultLines;
     this.itemsPointerEvents();
     this.itemsDragAndDrop();
+    this.loadPreviousGameState();
   }
+
+  private loadPreviousGameState(): void {
+    this.appLoader.fullData?.then(() => {
+      const { filledSentenceNumber } = this.appCashe.cashObject;
+      for (let i = 0; i < filledSentenceNumber; i += 1) {
+        this.fillSentence(
+          this.appLoader.currentSentences[i].split(" "),
+          this.wordsLines[i],
+          this.resultLines[i],
+        );
+      }
+      if (filledSentenceNumber !== 0) {
+        this.wordsActiveLine.classList.remove("words-panel__line_active");
+        this.resultActiveLine.classList.remove("result-panel__line_active");
+        this.wordsActiveLine = this.wordsLines[filledSentenceNumber];
+        this.resultActiveLine = this.resultLines[filledSentenceNumber];
+        this.wordsActiveLine.classList.add("words-panel__line_active");
+        this.resultActiveLine.classList.add("result-panel__line_active");
+      }
+      this.fillSentence(
+        this.appCashe.cashObject.wordsInResultLine.currentState,
+        this.wordsActiveLine,
+        this.resultActiveLine,
+      );
+    });
+  }
+
+  public fillSentence = (
+    sentence: string[],
+    wordLine: HTMLElement,
+    resultLine: HTMLElement,
+  ): void => {
+    const items = [...wordLine.children];
+    sentence.forEach((word) => {
+      const neededItem = items.find(
+        (item) => item.textContent?.trim() === word,
+      );
+      if (neededItem === undefined) {
+        throw new Error();
+      }
+      items.splice(items.indexOf(neededItem), 1);
+      resultLine.append(neededItem);
+    });
+  };
 
   private createResultPanel(): ResultPanelView {
     const RESULT_PANEL_PARAMS: ElementParametrs = {
@@ -90,10 +139,15 @@ export class GameFieldView extends ViewLoadable {
         this.wordsActiveLine = nextLine;
       }
     });
-    this.appLoader.sentenceNumber += 1;
+    this.appCashe.nextSentence();
   }
 
-  public itemsEventsSetup(event: Event): HTMLElement[] | null {
+  public itemsEventsSetup(event: Event): {
+    line: HTMLElement;
+    item: HTMLElement;
+    index: number;
+    word: string;
+  } | null {
     const { currentTarget: line, target } = event;
     if (!(target instanceof HTMLElement) || !(line instanceof HTMLElement)) {
       throw new Error("currenTtarget or target is not HTMLelement");
@@ -122,25 +176,47 @@ export class GameFieldView extends ViewLoadable {
     if (item.style.opacity === "0") {
       return null;
     }
-    return [line, item];
+    // find item word, item index in line
+    let previousSibling = item.previousElementSibling;
+    let index = 0;
+    while (previousSibling) {
+      index += 1;
+      previousSibling = previousSibling.previousElementSibling;
+    }
+    const word = item.textContent?.trim();
+    if (word === undefined) {
+      throw new Error("Cannot read word frow item");
+    }
+    return {
+      line,
+      item,
+      index,
+      word,
+    };
   }
 
   private itemsPointerEvents(): void {
     [...this.wordsLines, ...this.resultLines].forEach((Line) => {
       Line.addEventListener("click", (event: Event) => {
-        const arr = this.itemsEventsSetup(event);
-        if (arr === null) {
+        const obj = this.itemsEventsSetup(event);
+        if (obj === null) {
           return;
         }
-        const [line, item] = arr;
+        // eslint-disable-next-line
+        const { line, item, index, word } = obj;
         const itemAnimator = new AnimationMaker(item);
         const options = {
           smoothDisappearance: true,
         };
         if (line.classList.contains("result-panel__line")) {
           itemAnimator.insert(this.wordsActiveLine, "append", options);
+          this.appCashe.deleteWord(index);
         } else {
           itemAnimator.insert(this.resultActiveLine, "append", options);
+          this.appCashe.addWord(
+            word,
+            this.appCashe.cashObject.wordsInResultLine.currentState.length,
+          );
         }
       });
     });
@@ -158,7 +234,8 @@ export class GameFieldView extends ViewLoadable {
         if (arr === null) {
           return;
         }
-        const [line, item] = arr;
+        // eslint-disable-next-line
+        const { line, item, index, word } = arr;
         if (item.getAttribute("insertAnimation") === "true") {
           return;
         }
@@ -174,6 +251,9 @@ export class GameFieldView extends ViewLoadable {
               Math.abs(downEvent.clientX - moveEvent.clientX) > 15 ||
               Math.abs(downEvent.clientY - moveEvent.clientY) > 15
             ) {
+              if (line === this.resultActiveLine) {
+                this.appCashe.deleteWord(index);
+              }
               followPointerHandler = itemAnimator.startfollowPointer(
                 initCoordinates,
                 downEvent,
@@ -211,6 +291,7 @@ export class GameFieldView extends ViewLoadable {
             insertItem = null;
           }
           if (insertItem !== null) {
+            // ---pointerup under item--------------------------
             const insertItemCoordinates = insertItem?.getBoundingClientRect();
             itemAnimator.stopFollowPointer(followPointerHandler, {
               smoothDisappearance: true,
@@ -232,18 +313,45 @@ export class GameFieldView extends ViewLoadable {
                 smoothInsert: true,
               };
             }
+            const insertItemIndex = [
+              ...(insertItem.parentElement?.children || []),
+            ].indexOf(insertItem);
+            console.log(`insert index - ${insertItemIndex}`);
+            if (insertItemIndex === -1) {
+              throw new Error("incorrect insertItemIndex");
+            }
             if (
               upEvent.clientX - insertItemCoordinates.x >=
               insertItemCoordinates.width / 2
             ) {
               itemAnimator.insert(insertItem, "after", insertOptions);
+              if (insertItem.parentElement === this.resultActiveLine) {
+                if (insertItem.style.opacity === "0") {
+                  this.appCashe.addWord(word, insertItemIndex);
+                } else if (
+                  index <= insertItemIndex &&
+                  line === this.resultActiveLine
+                ) {
+                  this.appCashe.addWord(word, insertItemIndex);
+                } else {
+                  this.appCashe.addWord(word, insertItemIndex + 1);
+                }
+              }
             } else {
               itemAnimator.insert(insertItem, "before", insertOptions);
+              if (insertItem.parentElement === this.resultActiveLine) {
+                if (index < insertItemIndex && line === this.resultActiveLine) {
+                  this.appCashe.addWord(word, insertItemIndex - 1);
+                } else {
+                  this.appCashe.addWord(word, insertItemIndex);
+                }
+              }
             }
           } else if (
             elUnderMouse === this.resultActiveLine ||
             elUnderMouse === this.wordsActiveLine
           ) {
+            // --- pointerup under active line (words- or result-)-------
             if (elUnderMouse === line) {
               itemAnimator.insert(elUnderMouse, "append", {
                 smoothInsert: true,
@@ -257,7 +365,11 @@ export class GameFieldView extends ViewLoadable {
             itemAnimator.stopFollowPointer(followPointerHandler, {
               smoothDisappearance: true,
             });
+            if (elUnderMouse === this.resultActiveLine) {
+              this.appCashe.addWord(word);
+            }
           } else {
+            // --- pointer up in random place---------------------------
             let oppositLine: HTMLElement;
             if (line === this.wordsActiveLine) {
               oppositLine = this.resultActiveLine;
@@ -280,10 +392,16 @@ export class GameFieldView extends ViewLoadable {
               itemAnimator.stopFollowPointer(followPointerHandler, {
                 smoothDisappearance: true,
               });
+              if (oppositLine === this.resultActiveLine) {
+                this.appCashe.addWord(word);
+              }
             } else {
               itemAnimator.stopFollowPointer(followPointerHandler, {
                 returnIsNeeded: true,
               });
+              if (line === this.resultActiveLine) {
+                this.appCashe.addWord(word, index);
+              }
             }
           }
           window.removeEventListener("pointerup", pointerUpHandler);
@@ -291,5 +409,18 @@ export class GameFieldView extends ViewLoadable {
         window.addEventListener("pointerup", pointerUpHandler);
       });
     });
+  }
+
+  public refillPanel(): void {
+    [...this.getHtmlElement().querySelectorAll(".item")].forEach((item) => {
+      item.remove();
+    });
+    this.wordsPanelView.fillPanel();
+    this.wordsActiveLine.classList.remove("words-panel__line_active");
+    this.resultActiveLine.classList.remove("result-panel__line_active");
+    [this.wordsActiveLine] = this.wordsLines;
+    [this.resultActiveLine] = this.resultLines;
+    this.wordsActiveLine.classList.add("words-panel__line_active");
+    this.resultActiveLine.classList.add("result-panel__line_active");
   }
 }
