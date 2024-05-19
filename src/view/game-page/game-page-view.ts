@@ -62,6 +62,7 @@ export class GamePageView extends ViewLoadable {
       BOTTOM_PANEL_PARAMS,
       this.appLoader,
       this.gameFieldView,
+      this.gameSelectorInterface,
       this.appCashe,
     );
     this.getHtmlElement().append(BottomPanel.getHtmlElement());

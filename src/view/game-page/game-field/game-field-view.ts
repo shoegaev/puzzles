@@ -316,7 +316,6 @@ export class GameFieldView extends ViewLoadable {
             const insertItemIndex = [
               ...(insertItem.parentElement?.children || []),
             ].indexOf(insertItem);
-            console.log(`insert index - ${insertItemIndex}`);
             if (insertItemIndex === -1) {
               throw new Error("incorrect insertItemIndex");
             }

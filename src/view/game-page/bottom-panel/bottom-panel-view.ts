@@ -3,10 +3,13 @@ import { ElementParametrs } from "../../../types/view-types";
 import { Loader } from "../../../loader/loader";
 import { GameFieldView } from "../game-field/game-field-view";
 import { AppCashe } from "../../../app-cashe/app-cashe";
+import { GameSelectorInerfaceView } from "../game-selector-inerface/game-selector-interface-view";
 import "./bottom-panel-style.scss";
 
 export class BottomPanelView extends ViewLoadable {
   gameFieldView: GameFieldView;
+
+  gameSelectorInerface: GameSelectorInerfaceView;
 
   appCashe: AppCashe;
 
@@ -14,11 +17,13 @@ export class BottomPanelView extends ViewLoadable {
     params: ElementParametrs,
     appLoader: Loader,
     gameFieldView: GameFieldView,
+    gameSelectorInerfaceView: GameSelectorInerfaceView,
     appCashe: AppCashe,
   ) {
     super(params, appLoader);
     this.appCashe = appCashe;
     this.gameFieldView = gameFieldView;
+    this.gameSelectorInerface = gameSelectorInerfaceView;
     this.addInnerElementParams();
     this.addInnerElements();
     this.hideWordsButtonOnCLick();
@@ -80,16 +85,42 @@ export class BottomPanelView extends ViewLoadable {
     const button = this.getHtmlElement().querySelector(
       ".bottom-panel__continue-button",
     );
-    if (this.appCashe.cashObject.filledSentenceNumber === 9) {
-      console.log("конец");
-    } else {
-      button?.addEventListener("click", () => {
-        if (button.classList.contains("button_disabled")) {
-          return;
-        }
+    button?.addEventListener("click", () => {
+      if (button.classList.contains("button_disabled")) {
+        return;
+      }
+      if (this.appCashe.cashObject.filledSentenceNumber === 9) {
+        this.appLoader.levelData?.then((data) => {
+          const { roundsCount } = data;
+          const roundNumber = this.appCashe.cashObject.round;
+          const levelNumber = this.appCashe.cashObject.level;
+          let nextRoundNumber: number;
+          let nextLevelNumber: number;
+          if (roundsCount === roundNumber) {
+            nextRoundNumber = 1;
+            nextLevelNumber = levelNumber + 1;
+          } else {
+            nextRoundNumber = roundNumber + 1;
+            nextLevelNumber = levelNumber;
+          }
+          this.appLoader.loadFullData(
+            String(nextLevelNumber),
+            String(nextRoundNumber),
+          );
+          this.gameFieldView.refillPanel();
+          this.appCashe.setRoundAndLevelNumbers(
+            nextRoundNumber,
+            nextLevelNumber,
+          );
+          this.gameSelectorInerface.newGame(
+            nextLevelNumber,
+            nextRoundNumber,
+          );
+        });
+      } else {
         this.gameFieldView.moveToNextSentence();
-      });
-    }
+      }
+    });
   }
 
   public checkContinueButtonStatus(): void {

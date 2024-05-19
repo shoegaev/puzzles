@@ -316,7 +316,6 @@ export class GameSelectorInerfaceView extends ViewLoadable {
       if (this.getHtmlElement().classList.contains("game-selector_open")) {
         this.fillGameInformation();
         this.closeModalWindow();
-        this.appLoader.loadLevelData(String(this.config.levelNumber));
         this.appLoader.loadFullData(
           String(this.config.levelNumber),
           String(this.config.roundNumber),
@@ -384,5 +383,13 @@ export class GameSelectorInerfaceView extends ViewLoadable {
     button.classList.remove("button_disabled");
     button.textContent = "change level";
     document.body.classList.remove("modal-window-opened");
+  }
+
+  public newGame(levelNumber: number, roundNumber: number): void {
+    this.config = {
+      levelNumber,
+      roundNumber,
+    };
+    this.fillGameInformation();
   }
 }
