@@ -4,5 +4,36 @@
   display: flex;
   justify-content: center;
   gap: 20px;
+  align-items: center;
+}
 
+.opacity-controller {
+  width: 160px;
+  height: 20px;
+  border: $interfaceBorder;
+  border-radius: $interfaceBorderRadius;
+  position: relative;
+  background-color: $backgroundPink;
+  cursor: pointer;
+  .opacity-controller__toggle-switch {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border: $interfaceBorder;
+    border-radius: 100%;
+    top: 0;
+    transform: translate(-50%, -25%);
+    background-color: $borderRed;
+    cursor: pointer;
+    z-index: 3;
+  }
+  .opacity-controller__filler {
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: $backgroundAzure;
+    border-radius: $interfaceBorderRadius;
+    z-index: 2;
+  }
 }

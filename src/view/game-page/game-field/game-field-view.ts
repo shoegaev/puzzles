@@ -422,4 +422,25 @@ export class GameFieldView extends ViewLoadable {
     this.wordsActiveLine.classList.add("words-panel__line_active");
     this.resultActiveLine.classList.add("result-panel__line_active");
   }
+
+  public setWordsBackgroundOpacity(opacityValue: number): void {
+    this.appLoader.fullData?.then(() => {
+      if (opacityValue < 0 || opacityValue > 1) {
+        throw new Error("incorrect opacity value");
+      }
+      const itemsSpansElement = [
+        ...this.getHtmlElement().querySelectorAll(".item__text"),
+      ];
+
+      itemsSpansElement.forEach((element) => {
+        if (element instanceof HTMLElement) {
+          const elStyles = window.getComputedStyle(element);
+          element.style.backgroundColor = `${elStyles.backgroundColor
+            .split(",")
+            .splice(0, 3)
+            .join(",")}, ${opacityValue}`;
+        }
+      });
+    });
+  }
 }

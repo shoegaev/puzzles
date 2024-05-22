@@ -8,6 +8,7 @@ export class AppCashe {
       level: 1,
       round: 1,
       filledSentenceNumber: 0,
+      wordsOpacity: 0.3,
       wordsInResultLine: {
         currentState: [],
         previousState: [],
@@ -58,6 +59,11 @@ export class AppCashe {
     this.saveCashe();
   }
 
+  public setOpacity(opacity: number): void {
+    this.cashObject.wordsOpacity = opacity;
+    this.saveCashe();
+  }
+
   private cleanWordsInresultLine(): void {
     this.cashObject.wordsInResultLine = {
       currentState: [],
@@ -66,7 +72,6 @@ export class AppCashe {
   }
 
   private saveCashe(): void {
-    console.log(this.cashObject.wordsInResultLine.currentState);
     localStorage.setItem("puzzleGameData", JSON.stringify(this.cashObject));
   }
 }

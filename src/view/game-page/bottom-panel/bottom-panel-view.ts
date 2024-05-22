@@ -3,6 +3,7 @@ import { ElementParametrs } from "../../../types/view-types";
 import { Loader } from "../../../loader/loader";
 import { GameFieldView } from "../game-field/game-field-view";
 import { AppCashe } from "../../../app-cashe/app-cashe";
+import { OpacityControllerView } from "./opacity-controller/opacity-controller-view";
 import { GameSelectorInerfaceView } from "../game-selector-inerface/game-selector-interface-view";
 import "./bottom-panel-style.scss";
 
@@ -12,6 +13,8 @@ export class BottomPanelView extends ViewLoadable {
   gameSelectorInerface: GameSelectorInerfaceView;
 
   appCashe: AppCashe;
+
+  opacityControllerView: OpacityControllerView;
 
   constructor(
     params: ElementParametrs,
@@ -26,9 +29,10 @@ export class BottomPanelView extends ViewLoadable {
     this.gameSelectorInerface = gameSelectorInerfaceView;
     this.addInnerElementParams();
     this.addInnerElements();
-    this.hideWordsButtonOnCLick();
+    this.opacityControllerView = this.createOpacityControllerView();
     this.continueButtonOnCLick();
     this.continueButtonStatus();
+    this.hideWordsButtonOnCLick();
     this.appLoader.fullData?.then(() => {
       this.checkContinueButtonStatus();
     });
@@ -56,6 +60,20 @@ export class BottomPanelView extends ViewLoadable {
         textContent: "Hide words",
       },
     ];
+  }
+
+  private createOpacityControllerView(): OpacityControllerView {
+    const params: ElementParametrs = {
+      tag: "div",
+      cssClasses: ["bottom-panel__opacity-controller", "opacity-controller"],
+    };
+    const opacityControllerView = new OpacityControllerView(
+      params,
+      this.gameFieldView,
+      this.appCashe,
+    );
+    this.getHtmlElement().append(opacityControllerView.getHtmlElement());
+    return opacityControllerView;
   }
 
   private hideWordsButtonOnCLick(): void {
@@ -112,10 +130,7 @@ export class BottomPanelView extends ViewLoadable {
             nextRoundNumber,
             nextLevelNumber,
           );
-          this.gameSelectorInerface.newGame(
-            nextLevelNumber,
-            nextRoundNumber,
-          );
+          this.gameSelectorInerface.newGame(nextLevelNumber, nextRoundNumber);
         });
       } else {
         this.gameFieldView.moveToNextSentence();

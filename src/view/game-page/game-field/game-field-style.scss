@@ -36,7 +36,6 @@
   font-size: $desctop-fontSize-heading;
   position: relative;
   overflow: hidden;
-  transition: color 1s ease-in;
   user-select: none;
   height: 65px;
 }
@@ -46,7 +45,7 @@
   border-radius: $interfaceBorderRadius;
   background-color: rgba($backgroundPink, 0.3);
   padding: 4px 8px;
-  transition: 0.2s all ease;
+  transition: opacity 0.2s ease;
 }
 .item__image {
   position: absolute;
@@ -73,8 +72,10 @@
   .result-panel__line_active,
   .words-panel__line_active {
     .item:hover {
+      z-index: 4;
       .item__text {
-        background-color: rgba($backgroundPink, 0.7);
+        background-color: rgba($borderRed, 0.8) !important;
+        color: $backgroundPink !important;
       }
     }
     .item:hover.item::before {
