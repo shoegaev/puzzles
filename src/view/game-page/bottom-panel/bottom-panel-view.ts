@@ -31,10 +31,13 @@ export class BottomPanelView extends ViewLoadable {
     this.addInnerElements();
     this.opacityControllerView = this.createOpacityControllerView();
     this.continueButtonOnCLick();
-    this.continueButtonStatus();
+    this.buttonsStatus();
     this.hideWordsButtonOnCLick();
+    this.checkButtonOnClick();
+    this.checkButtonRemoveActiveStatus();
     this.appLoader.fullData?.then(() => {
-      this.checkContinueButtonStatus();
+      this.testContinueButtonStatus();
+      this.testCheckButtonStatus();
     });
   }
 
@@ -135,13 +138,51 @@ export class BottomPanelView extends ViewLoadable {
       } else {
         this.gameFieldView.moveToNextSentence();
       }
+      button.classList.add("button_disabled");
     });
   }
 
-  public checkContinueButtonStatus(): void {
-    const assembledSentence =
-      this.appCashe.cashObject.wordsInResultLine.currentState;
-    const rightSentence = this.appLoader.getCurrentSentence();
+  private buttonsStatus(): void {
+    const lines = [
+      ...this.gameFieldView.getHtmlElement().querySelectorAll(".line"),
+    ];
+    lines.forEach((line) => {
+      line.addEventListener("pointerdown", (downEvent: Event) => {
+        const arr = this.gameFieldView.itemsEventsSetup(downEvent);
+        if (arr === null) {
+          return;
+        }
+        const pointerUpHandler = () => {
+          this.testContinueButtonStatus();
+          this.testCheckButtonStatus();
+          window.removeEventListener("pointerup", pointerUpHandler);
+        };
+        window.addEventListener("pointerup", pointerUpHandler);
+      });
+      line.addEventListener("click", (event) => {
+        const arr = this.gameFieldView.itemsEventsSetup(event);
+        if (arr === null) {
+          return;
+        }
+        this.testContinueButtonStatus();
+        this.testCheckButtonStatus();
+      });
+    });
+  }
+
+  private getSentences(): {
+    assembledSentence: string[];
+    rightSentence: string[];
+    // eslint-disable-next-line
+  } {
+    return {
+      assembledSentence: this.appCashe.getAssembledSentence(),
+      rightSentence: this.appLoader.getCurrentSentence(),
+    };
+  }
+
+  public testContinueButtonStatus(): void {
+    const { assembledSentence, rightSentence } = this.getSentences();
     const button = this.getHtmlElement().querySelector(
       ".bottom-panel__continue-button",
     );
@@ -154,28 +195,59 @@ export class BottomPanelView extends ViewLoadable {
     }
   }
 
-  private continueButtonStatus(): void {
-    const lines = [
-      ...this.gameFieldView.getHtmlElement().querySelectorAll(".line"),
-    ];
-    lines.forEach((line) => {
-      line.addEventListener("pointerdown", (downEvent: Event) => {
-        const arr = this.gameFieldView.itemsEventsSetup(downEvent);
-        if (arr === null) {
+  private testCheckButtonStatus(): void {
+    const { assembledSentence, rightSentence } = this.getSentences();
+    const button = document.querySelector(".bottom-panel__check-button");
+    button?.classList.remove("button_disabled");
+    if (
+      assembledSentence.length !== rightSentence.length ||
+      String(assembledSentence) === String(rightSentence)
+    ) {
+      button?.classList.add("button_disabled");
+    }
+  }
+
+  private checkButtonOnClick(): void {
+    const button = this.getHtmlElement().querySelector(
+      ".bottom-panel__check-button",
+    );
+    button?.addEventListener("click", () => {
+      if (button.classList.contains("button_disabled")) {
+        return;
+      }
+      const { assembledSentence, rightSentence } = this.getSentences();
+
+      if (button.classList.contains("button_active")) {
+        button.classList.remove("button_active");
+        this.gameFieldView.stopHighlightItems();
+      } else {
+        button.classList.add("button_active");
+        assembledSentence.forEach((word, index) => {
+          if (word !== rightSentence[index]) {
+            this.gameFieldView.highlightItem(index);
+          }
+        });
+      }
+    });
+  }
+
+  private checkButtonRemoveActiveStatus(): void {
+    const button = this.getHtmlElement().querySelector(
+      ".bottom-panel__check-button",
+    );
+    if (button === null) {
+      return;
+    }
+    [
+      ...this.gameFieldView.resultLines,
+      ...this.gameFieldView.wordsLines,
+    ].forEach((line) => {
+      line.addEventListener("pointerdown", (event) => {
+        const obj = this.gameFieldView.itemsEventsSetup(event);
+        if (obj === null) {
           return;
         }
-        const pointerUpHandler = () => {
-          this.checkContinueButtonStatus();
-          window.removeEventListener("pointerup", pointerUpHandler);
-        };
-        window.addEventListener("pointerup", pointerUpHandler);
-      });
-      line.addEventListener("click", (event) => {
-        const arr = this.gameFieldView.itemsEventsSetup(event);
-        if (arr === null) {
-          return;
-        }
-        this.checkContinueButtonStatus();
+        button.classList.remove("button_active");
       });
     });
   }

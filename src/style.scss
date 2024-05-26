@@ -49,12 +49,30 @@ body.modal-window-opened {
   cursor: pointer;
   text-align: center;
   padding: 5px;
+  position: relative;
+}
+.button::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(100% + 10px);
+  height: calc(100% + 10px);
+  border: $interfaceBorder;
+  border-radius: $interfaceBorderRadius;
+  transition: opacity 0.2s ease;
+  opacity: 0;
 }
 
 .button_disabled {
   opacity: 0.4;
   cursor: auto;
 }
+.button_active::after {
+  opacity: 1;
+}
+
 @media (hover: hover) {
   .button:not(.button_disabled):hover {
     background-color: $borderRed;

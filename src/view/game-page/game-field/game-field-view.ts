@@ -35,6 +35,7 @@ export class GameFieldView extends ViewLoadable {
     this.itemsPointerEvents();
     this.itemsDragAndDrop();
     this.loadPreviousGameState();
+    this.stopHighlightItemsOnPointerDown();
   }
 
   private loadPreviousGameState(): void {
@@ -74,7 +75,7 @@ export class GameFieldView extends ViewLoadable {
         (item) => item.textContent?.trim() === word,
       );
       if (neededItem === undefined) {
-        throw new Error();
+        throw new Error("");
       }
       items.splice(items.indexOf(neededItem), 1);
       resultLine.append(neededItem);
@@ -440,6 +441,30 @@ export class GameFieldView extends ViewLoadable {
             .splice(0, 3)
             .join(",")}, ${opacityValue}`;
         }
+      });
+    });
+  }
+
+  public highlightItem(itemIndex: number): void {
+    const item = this.resultActiveLine.children[itemIndex];
+    item.classList.add("item_wrong");
+  }
+
+  public stopHighlightItems(): void {
+    const items = [...this.resultActiveLine.children];
+    items.forEach((item) => {
+      item.classList.remove("item_wrong");
+    });
+  }
+
+  private stopHighlightItemsOnPointerDown(): void {
+    [...this.resultLines, ...this.wordsLines].forEach((line) => {
+      line.addEventListener("pointerdown", (event) => {
+        const obj = this.itemsEventsSetup(event);
+        if (obj === null) {
+          return;
+        }
+        this.stopHighlightItems();
       });
     });
   }

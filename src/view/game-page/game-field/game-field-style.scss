@@ -12,7 +12,8 @@
   border-radius: $interfaceBorderRadius;
 }
 .line {
-  min-height: 80px;
+  min-height: 70px;
+  max-height: 70px;
   width: 100%;
   display: flex;
   padding: 5px 0.25%;
@@ -38,6 +39,18 @@
   overflow: hidden;
   user-select: none;
   height: 65px;
+}
+
+@keyframes item_wrong {
+  25% {
+    transform: rotate(-5deg);
+  }
+  75% {
+    transform: rotate(5deg);
+  }
+}
+.item_wrong {
+  animation: item_wrong 1s ease infinite;
 }
 
 .item__text {

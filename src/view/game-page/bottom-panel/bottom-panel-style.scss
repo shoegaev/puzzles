@@ -20,12 +20,14 @@
     width: 30px;
     height: 30px;
     border: $interfaceBorder;
-    border-radius: 100%;
+    border-radius: $interfaceBorderRadius;
+    border-width: 4px;
     top: 0;
     transform: translate(-50%, -25%);
-    background-color: $borderRed;
+    background-color: $backgroundPink;
     cursor: pointer;
     z-index: 3;
+    transition: background-color 0.2s ease;
   }
   .opacity-controller__filler {
     height: 100%;
@@ -35,5 +37,11 @@
     background-color: $backgroundAzure;
     border-radius: $interfaceBorderRadius;
     z-index: 2;
+  }
+}
+
+.opacity-controller:hover {
+  .opacity-controller__toggle-switch {
+    background-color: $borderRed;
   }
 }

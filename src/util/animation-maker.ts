@@ -190,6 +190,9 @@ export class AnimationMaker {
         this.folowPointerStatus.initHeight = this.element.style.height;
         this.folowPointerStatus.initWidth = this.element.style.width;
         this.element.style.width = `${initCoordinates.width}px`;
+
+        this.element.style.opacity = "0.8";
+        this.element.style.scale = "0.9";
       }
 
       this.element.style.top = `${
@@ -214,6 +217,8 @@ export class AnimationMaker {
     document.body.style.overflow = "";
 
     this.element.style.zIndex = "";
+    this.element.style.opacity = "";
+    this.element.style.scale = "";
     const { copy } = this.folowPointerStatus;
     if (copy === null) {
       return;

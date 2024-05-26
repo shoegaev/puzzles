@@ -74,6 +74,10 @@ export class AppCashe {
   private saveCashe(): void {
     localStorage.setItem("puzzleGameData", JSON.stringify(this.cashObject));
   }
+
+  public getAssembledSentence(): string[] {
+    return this.cashObject.wordsInResultLine.currentState;
+  }
 }
 // const b = [
 //   ...document.querySelector(".result-panel__line_active")?.children,
