@@ -18,6 +18,53 @@
   display: flex;
   padding: 5px 0.25%;
   gap: 5px;
+  position: relative;
+}
+.result-panel__line::before {
+  content: "10";
+  position: absolute;
+  left: -65px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: $interfaceBorder;
+  border-radius: calc($interfaceBorderRadius * 2);
+  width: 60px;
+  height: 60px;
+  text-align: center;
+  padding-top: 10px;
+  opacity: 0.3;
+  box-sizing: border-box;
+  transition: opacity 0.2s ease;
+}
+.result-panel__line.result-panel__line_active::before {
+  opacity: 1;
+}
+.result-panel__line:nth-child(1):before {
+  content: "1";
+}
+.result-panel__line:nth-child(2):before {
+  content: "2";
+}
+.result-panel__line:nth-child(3):before {
+  content: "3";
+}
+.result-panel__line:nth-child(4):before {
+  content: "4";
+}
+.result-panel__line:nth-child(5):before {
+  content: "5";
+}
+.result-panel__line:nth-child(6):before {
+  content: "6";
+}
+.result-panel__line:nth-child(7):before {
+  content: "7";
+}
+.result-panel__line:nth-child(8):before {
+  content: "8";
+}
+.result-panel__line:nth-child(9):before {
+  content: "9";
 }
 .game-field__words-panel {
   .line {
@@ -79,7 +126,9 @@
 }
 .result-panel__line_active,
 .words-panel__line_active {
-  cursor: pointer;
+  .item {
+    cursor: pointer;
+  }
 }
 @media (hover: hover) {
   .result-panel__line_active,
