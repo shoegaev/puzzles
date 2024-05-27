@@ -25,3 +25,4 @@ export class App {
     document.body.append(this.view.getHtmlElement());
   }
 }
+// разобраться почему не подгружается пред состояние

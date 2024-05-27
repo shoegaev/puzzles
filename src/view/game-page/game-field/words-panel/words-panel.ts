@@ -8,7 +8,9 @@ export class WordsPanelView extends ViewLoadable {
     super(params, appLoader);
     this.addInnerElementsParams();
     this.addInnerElements();
-    this.fillPanel();
+    this.appLoader.fullDataNew?.then(() => {
+      this.fillPanel();
+    });
   }
 
   private addInnerElementsParams(): void {

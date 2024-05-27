@@ -34,8 +34,10 @@ export class GameFieldView extends ViewLoadable {
     [this.resultActiveLine] = this.resultLines;
     this.itemsPointerEvents();
     this.itemsDragAndDrop();
-    this.loadPreviousGameState();
     this.stopHighlightItemsOnPointerDown();
+    this.appLoader.fullDataNew?.then(() => {
+      this.loadPreviousGameState();
+    });
   }
 
   private loadPreviousGameState(): void {

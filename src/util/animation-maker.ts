@@ -281,7 +281,7 @@ export class AnimationMaker {
     this.setTransition(transition);
     document.body.append(this.element);
     setTimeout(() => {
-      this.element.style.zIndex = "1000";
+      this.element.style.zIndex = "100";
       this.element.style.top = `calc(50vh + ${window.scrollY}px)`;
       this.element.style.left = `calc(50vw + ${window.scrollX}px)`;
       this.element.style.transform = "translate(-50%, -50%)";

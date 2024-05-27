@@ -128,12 +128,14 @@ export class BottomPanelView extends ViewLoadable {
             String(nextLevelNumber),
             String(nextRoundNumber),
           );
-          this.gameFieldView.refillPanel();
-          this.appCashe.setRoundAndLevelNumbers(
-            nextRoundNumber,
-            nextLevelNumber,
-          );
-          this.gameSelectorInerface.newGame(nextLevelNumber, nextRoundNumber);
+          this.appLoader.fullDataNew?.then(() => {
+            this.gameFieldView.refillPanel();
+            this.appCashe.setRoundAndLevelNumbers(
+              nextRoundNumber,
+              nextLevelNumber,
+            );
+            this.gameSelectorInerface.newGame(nextLevelNumber, nextRoundNumber);
+          });
         });
       } else {
         this.gameFieldView.moveToNextSentence();

@@ -36,6 +36,14 @@ body.modal-window-opened {
     opacity: 0.6;
   }
 }
+body.loading-window-opened {
+  overflow-y: hidden;
+  .modal-backdrop {
+    width: 100vw;
+    z-index: 101;
+    opacity: 0.6;
+  }
+}
 // buttons
 .button {
   border: $interfaceBorder;

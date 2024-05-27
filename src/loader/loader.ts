@@ -1,5 +1,6 @@
 import { AppCashe } from "../app-cashe/app-cashe";
 import { SentenceData, FullLevelData } from "../types/loader-data-types";
+import { LoadingWindowView } from "./loading-window/loading-window";
 
 export class Loader {
   appCashe: AppCashe;
@@ -10,23 +11,36 @@ export class Loader {
 
   fullData: Promise<[SentenceData[] | undefined, string | null, string]> | null;
 
+  fullDataNew: Promise<
+    [SentenceData[] | undefined, string | null, string]
+  > | null;
+
   urlBegining: string;
 
   currentSentences: string[];
 
+  loadingWindowView: LoadingWindowView;
+
+  controller: [AbortController] | [null];
+
   constructor(appCashe: AppCashe) {
+    this.controller = [null];
     this.appCashe = appCashe;
     this.levelData = null;
     this.ImageUrl = null;
     this.fullData = null;
+    this.fullDataNew = null;
     this.currentSentences = [];
     this.urlBegining =
       "https://raw.githubusercontent.com/rolling-scopes-school/rss-puzzle-data/main/";
+    this.loadingWindowView = new LoadingWindowView(this.controller);
   }
 
   public loadLevelData(levelNumber: string): Promise<FullLevelData> {
     const url = `${this.urlBegining}data/wordCollectionLevel${levelNumber}.json`;
-    const promise = fetch(url)
+    const controller = new AbortController();
+    this.controller[0] = controller;
+    const promise = fetch(url, { signal: controller.signal })
       .then((response: Response) => response.json())
       .then((data: FullLevelData) => data);
     this.levelData = promise;
@@ -34,7 +48,8 @@ export class Loader {
   }
 
   public loadFullData(levelNumer: string, roundNumber: string): void {
-    this.fullData = this.loadLevelData(levelNumer)
+    this.loadingWindowView.show();
+    this.fullDataNew = this.loadLevelData(levelNumer)
       .then(() => {
         this.loadImages(roundNumber);
       })
@@ -50,13 +65,22 @@ export class Loader {
           ]),
         // eslint-disable-next-line
       );
+    this.fullDataNew
+      .then(() => {
+        this.fullData = this.fullDataNew;
+        this.fullDataNew = null;
+        this.loadingWindowView.remove();
+      })
+      .catch((err: Error) => {
+        this.errorHandler(err);
+      });
   }
 
   public loadImages(roundNumber: string): void {
     this.levelData?.then((data) => {
       const imageName = data.rounds[Number(roundNumber) - 1].levelData.imageSrc;
       const url = `${this.urlBegining}images/${imageName}`;
-      this.ImageUrl = fetch(url)
+      this.ImageUrl = fetch(url, { signal: this.controller[0]?.signal })
         .then((response: Response) => response.blob())
         .then((blob) => URL.createObjectURL(blob));
     });
@@ -66,5 +90,11 @@ export class Loader {
     return this.currentSentences[
       this.appCashe.cashObject.filledSentenceNumber
     ].split(" ");
+  }
+
+  private errorHandler(err: Error): void {
+    if (err.message === "Failed to fetch") {
+      this.loadingWindowView.setErrorMessage("Error, you have connection problems");
+    }
   }
 }

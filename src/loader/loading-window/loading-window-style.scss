@@ -1,0 +1,67 @@
+@import "../../variables.scss";
+
+@keyframes item-movement {
+  0% {
+    top: 0px;
+  }
+  25% {
+    top: -10px;
+    background-color: $borderRed;
+  }
+  50% {
+    top: 0;
+  }
+  75% {
+    top: 10px;
+  }
+  100% {
+    top: 0px;
+  }
+}
+
+.loading-window {
+  width: 400px;
+  height: 250px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  background-color: $backgroundPinkIntense;
+  border: $interfaceBorder;
+  border-radius: $interfaceBorderRadius;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  // padding: 20px;
+  text-align: center;
+}
+
+.loading-window__loading-bar {
+  display: flex;
+  gap: 5px;
+}
+.loading-bar__item {
+  width: 30px;
+  height: 30px;
+  border: $interfaceBorder;
+  border-radius: $interfaceBorderRadius;
+  background-color: $backgroundPink;
+  position: relative;
+}
+.loading-window__loading-bar_active {
+  .loading-bar__item {
+    animation: 1s item-movement infinite linear;
+  }
+}
+
+.loading-bar__item:nth-child(2) {
+  animation-delay: 0.25s;
+}
+.loading-bar__item:nth-child(3) {
+  animation-delay: 0.5s;
+}
+.loading-bar__item:nth-child(4) {
+  animation-delay: 0.75s;
+}

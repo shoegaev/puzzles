@@ -314,17 +314,19 @@ export class GameSelectorInerfaceView extends ViewLoadable {
         return;
       }
       if (this.getHtmlElement().classList.contains("game-selector_open")) {
-        this.fillGameInformation();
-        this.closeModalWindow();
         this.appLoader.loadFullData(
           String(this.config.levelNumber),
           String(this.config.roundNumber),
         );
-        this.gameFieldView.refillPanel();
-        this.appCashe.setRoundAndLevelNumbers(
-          this.config.roundNumber,
-          this.config.levelNumber,
-        );
+        this.appLoader.fullDataNew?.then(() => {
+          this.closeModalWindow();
+          this.fillGameInformation();
+          this.gameFieldView.refillPanel();
+          this.appCashe.setRoundAndLevelNumbers(
+            this.config.roundNumber,
+            this.config.levelNumber,
+          );
+        });
       } else {
         this.openModalWindow();
         this.addRounds();
@@ -356,9 +358,16 @@ export class GameSelectorInerfaceView extends ViewLoadable {
     panelAnimator.centerOnPage({ saveEmptyPlace: true });
     setTimeout(() => {
       panel.classList.add("game-selector_open");
-      this.levelSelector?.children[this.config.levelNumber - 1].classList.add(
-        "selector__item_active",
-      );
+      if (this.levelSelector !== null) {
+        const items = [...this.levelSelector?.children];
+        items.forEach((el) => {
+          el.classList.remove("selector__item_active");
+        });
+        items[this.config.levelNumber - 1].classList.add(
+          "selector__item_active",
+        );
+      }
+
       button.textContent = "play";
       document.body.classList.add("modal-window-opened");
     }, 0);
