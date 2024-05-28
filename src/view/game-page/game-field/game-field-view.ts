@@ -37,6 +37,7 @@ export class GameFieldView extends ViewLoadable {
     this.stopHighlightItemsOnPointerDown();
     this.appLoader.fullDataNew?.then(() => {
       this.loadPreviousGameState();
+      this.setWordsBackgroundOpacity(this.appCashe.cashObject.wordsOpacity);
     });
   }
 
