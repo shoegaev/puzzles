@@ -45,3 +45,15 @@
     background-color: $borderRed;
   }
 }
+
+@media (max-width: 1800px) {
+  .opacity-controller {
+    width: 120px;
+    height: 15px;
+    .opacity-controller__toggle-switch {
+      position: absolute;
+      width: 25px;
+      height: 25px;
+    }
+  }
+}

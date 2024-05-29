@@ -275,7 +275,7 @@ export class AnimationMaker {
     this.element.style.position = "absolute";
     this.element.style.top = `${initialCoordinates.y + window.scrollY}px`;
     this.element.style.left = `${initialCoordinates.x + window.scrollX}px`;
-    const transition = `top ${this.animationDuration / 1.5}s ease, left ${
+    const transition = `top ${this.animationDuration}s ease, left ${
       this.animationDuration
     }s ease`;
     this.setTransition(transition);
@@ -294,7 +294,7 @@ export class AnimationMaker {
 
   public returnAfterCenter(copy: HTMLElement): void {
     const copyCoordinates = copy.getBoundingClientRect();
-    const transition = `top ${this.animationDuration / 1.5}s ease, left ${
+    const transition = `top ${this.animationDuration}s ease, left ${
       this.animationDuration
     }s ease`;
     this.setTransition(transition);

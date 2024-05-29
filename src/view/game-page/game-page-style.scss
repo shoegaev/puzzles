@@ -3,3 +3,8 @@
   flex-direction: column;
   gap: 20px;
 }
+@media (max-width: 1400px) {
+  .game-page {
+    gap: 10px;
+  }
+}

@@ -65,3 +65,15 @@
 .loading-bar__item:nth-child(4) {
   animation-delay: 0.75s;
 }
+@media (max-width: 2000px) {
+  .loading-window {
+    width: 350px;
+    height: 200px;
+  }
+}
+@media (max-width: 950px) {
+  .loading-window {
+    width: 310px;
+    height: 180px;
+  }
+}

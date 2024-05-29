@@ -15,7 +15,6 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 10px;
 
   transition: all 0.5s ease;
 }
@@ -44,7 +43,7 @@
   top: 50%;
   left: 50%;
   width: 0px;
-  height: 4px;
+  height: 5px;
   background-color: $borderRed;
   transition: background-color 0.2s ease, width 0.5s ease, height 0.5s ease,
     border-width 0.5s ease;
@@ -58,7 +57,7 @@
 
 // game information
 .game-information__heading {
-  font-size: $desctop-fontSize-heading;
+  font-size: $fontSize-heading;
 }
 .game-information__information {
   transition: all 0.5s ease;
@@ -73,11 +72,12 @@
   gap: 10px;
 }
 .selector {
-  // border: $interfaceBorder;
   border-radius: $interfaceBorderRadius;
   background-color: $backgroundPink;
   height: 0px;
   opacity: 0;
+  font-size: $fontSize-heading-2300px;
+  text-align: center;
 
   min-width: 100px;
   overflow: hidden;
@@ -130,19 +130,21 @@
 
 // opened modal window
 .game-page__game-selector.game-selector_open {
-  width: 500px;
+  width: 700px;
   z-index: 20;
+  gap: 10px;
 
   .button.close-button {
-    width: 40px;
-    height: 40px;
+    width: 60px;
+    height: 60px;
     border: $interfaceBorder;
     .close-button__stick {
       width: 80%;
     }
   }
   .selector {
-    height: 200px;
+    height: 350px;
+    width: 230px;
     opacity: 1;
     border-width: 4px;
   }
@@ -155,5 +157,82 @@
   .game-selector__button_disabled {
     opacity: 0.5;
     cursor: auto;
+  }
+}
+@media (max-width: 2000px) {
+  .game-page__game-selector.game-selector_open {
+    width: 600px;
+    .button.close-button {
+      width: 45px;
+      height: 45px;
+    }
+    .selector {
+      height: 300px;
+      width: 200px;
+      font-size: $fontSize-heading-2000px;
+    }
+  }
+}
+
+@media (max-width: 1800px) {
+  .game-page__game-selector {
+    width: 300px;
+  }
+  .game-information__heading {
+    font-size: $fontSize-heading-1800px;
+  }
+  .game-information__information {
+    font-size: $fontSize-1800px;
+    height: 60px;
+  }
+  .selector {
+    font-size: $fontSize-heading-1800px;
+  }
+  .game-page__game-selector.game-selector_open {
+    width: 500px;
+    .selector {
+      height: 240px;
+      width: 180px;
+      font-size: $fontSize-heading-1800px;
+    }
+  }
+}
+@media (max-width: 1200px) {
+  .game-page__game-selector {
+    width: 220px;
+  }
+  .game-information__heading {
+    font-size: $fontSize-heading-1200px;
+  }
+  .game-information__information {
+    font-size: $fontSize-1200px;
+    height: 50px;
+  }
+  .selector {
+    font-size: $fontSize-heading-1200px;
+  }
+  .game-page__game-selector.game-selector_open {
+    width: 450px;
+    .selector {
+      height: 200px;
+      width: 160px;
+      font-size: $fontSize-heading-1200px;
+    }
+  }
+}
+
+@media (max-width: 950px) {
+  .game-page__game-selector {
+    width: 180px;
+  }
+  .game-information__heading {
+    font-size: $fontSize-heading-950px;
+  }
+  .game-information__information {
+    font-size: $fontSize-950px;
+    height: 40px;
+  }
+  .selector {
+    font-size: $fontSize-heading-950px;
   }
 }
