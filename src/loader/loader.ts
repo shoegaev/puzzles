@@ -66,7 +66,13 @@ export class Loader {
         // eslint-disable-next-line
       );
     this.fullDataNew
-      .then(() => {
+      .then((data) => {
+        const sentences = data[0]?.map(
+          (sentenceData) => sentenceData.textExample,
+        );
+        if (sentences) {
+          this.currentSentences = sentences;
+        }
         this.fullData = this.fullDataNew;
         this.fullDataNew = null;
         this.loadingWindowView.remove();
@@ -94,7 +100,9 @@ export class Loader {
 
   private errorHandler(err: Error): void {
     if (err.message === "Failed to fetch") {
-      this.loadingWindowView.setErrorMessage("Error, you have connection problems");
+      this.loadingWindowView.setErrorMessage(
+        "Error, you have connection problems",
+      );
     }
   }
 }

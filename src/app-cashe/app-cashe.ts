@@ -85,3 +85,8 @@ export class AppCashe {
 // const a = JSON.parse(localStorage.getItem("puzzleGameData")).wordsInResultLine
 //   .currentState;
 // String(a) === String(b);
+
+// console.log(
+//   JSON.parse(localStorage.getItem("puzzleGameData")).wordsInResultLine
+//     .currentState,
+// );

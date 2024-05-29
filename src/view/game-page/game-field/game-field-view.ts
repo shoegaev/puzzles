@@ -187,6 +187,12 @@ export class GameFieldView extends ViewLoadable {
       index += 1;
       previousSibling = previousSibling.previousElementSibling;
     }
+    if (
+      item.previousElementSibling instanceof HTMLElement &&
+      item.previousElementSibling.style.opacity === "0"
+    ) {
+      index -= 1;
+    }
     const word = item.textContent?.trim();
     if (word === undefined) {
       throw new Error("Cannot read word frow item");
@@ -294,7 +300,15 @@ export class GameFieldView extends ViewLoadable {
           } else {
             insertItem = null;
           }
-          if (insertItem !== null) {
+          if (
+            insertItem !== null &&
+            (insertItem.parentElement?.classList.contains(
+              "result-panel__line_active",
+            ) ||
+              insertItem.parentElement?.classList.contains(
+                "words-panel__line_active",
+              ))
+          ) {
             // ---pointerup under item--------------------------
             const insertItemCoordinates = insertItem?.getBoundingClientRect();
             itemAnimator.stopFollowPointer(followPointerHandler, {

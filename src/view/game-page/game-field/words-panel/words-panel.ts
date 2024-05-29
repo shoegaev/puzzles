@@ -33,7 +33,6 @@ export class WordsPanelView extends ViewLoadable {
       if (sentences === undefined || imageUrl === null) {
         throw new Error("incorrect game data");
       }
-      this.appLoader.currentSentences = sentences;
       sentences.forEach((sentence, sentenceIndex) => {
         const sentenceArr = sentence.split(" ");
         const lettersQuantity = sentenceArr.join("").length;

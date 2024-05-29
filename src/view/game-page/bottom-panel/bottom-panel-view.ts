@@ -35,7 +35,7 @@ export class BottomPanelView extends ViewLoadable {
     this.hideWordsButtonOnCLick();
     this.checkButtonOnClick();
     this.checkButtonRemoveActiveStatus();
-    this.appLoader.fullData?.then(() => {
+    this.appLoader.fullDataNew?.then(() => {
       this.testContinueButtonStatus();
       this.testCheckButtonStatus();
     });
